@@ -4,96 +4,23 @@
 #include <stdlib.h>
 #include <cstring>
 
-// double my_atof(const char* str)
-// {
-// 	double sign = 1.0;
-// 	double value = 0.0;
-// 	double exponent = 1.0;
-// 	int exponent_sign = 1;
-// 	int exponent_value = 0;
-// 	int digit_count = 0;
-// 	bool exponent_set = false;
-
-// 	if (str == nullptr) {
-// 		return 0.0;
-// 	}
-
-// 	if (*str == '-') {
-// 		sign = -1.0;
-// 		str++;
-// 	} else if (*str == '+') {
-// 		str++;
-// 	}
-
-// 	if (!strncmp (str, "inf", 3))
-// 		return (INFINITY * sign);
-// 	else if (!strncmp(str, "nan", 3))
-// 		return (NAN);
-// 	while (*str != '\0') {
-// 		if (*str >= '0' && *str <= '9') {
-// 			digit_count++;
-// 			if (digit_count > 308) {
-// 				if (exponent_set) {
-// 					exponent_value = (exponent_sign == 1) ? INT_MAX : INT_MIN;
-// 				} else {
-// 					if (sign == 1.0) {
-// 						return INFINITY;
-// 					} else {
-// 						return -INFINITY;
-// 					}
-// 				}
-// 			}
-// 			value = value * 10.0 + (*str - '0');
-// 		} else if (*str == '.') {
-// 			str++;
-// 			break;
-// 		} else if ((*str == 'e' || *str == 'E') && !exponent_set) {
-// 			exponent_set = true;
-// 			str++;
-// 			if (*str == '-') {
-// 				exponent_sign = -1;
-// 				str++;
-// 			} else if (*str == '+') {
-// 				str++;
-// 			}
-// 		} else {
-// 			break;
-// 		}
-// 		str++;
-// 	}
-
-// 	while (*str != '\0') {
-// 		if (*str >= '0' && *str <= '9') {
-// 			exponent_value = exponent_value * 10 + (*str - '0');
-// 		} else {
-// 			break;
-// 		}
-// 		str++;
-// 	}
-
-// 	if (exponent_set) {
-// 		exponent = pow(10.0, exponent_value * exponent_sign);
-// 		value *= exponent;
-// 	}
-
-// 	return sign * value;
-// }
-
 void	exit_with_error(std::string error_message)
 {
 	std::cerr << error_message;
 	exit (EXIT_FAILURE);
 }
-
 int	main(int ac, char **av)
 {
 	if (ac != 2)
 		exit_with_error("This program needs 1 argument exactly. EX: ./scalar 'argument'");
 	double x;
+	char *ptr;
 	if (strlen(av[1]) == 1)
 		x = av[1][0] - '0';
 	else
-		x = strtod(av[1], NULL);
+		x = strtod(av[1], &ptr);
+	if (*ptr)
+		exit_with_error("Takes 1 parameter with no special characters!\n");
 	unsigned char c = (unsigned char ) x;
 	int	i = (int)x;
 	{
@@ -114,10 +41,16 @@ int	main(int ac, char **av)
 	}
 	{
 		std::cout << "Float: ";
-		std::cout << x << "f"<< std::endl;
+		std::cout << x;
+		if (x - floor(x) == 0)
+			std::cout << ".0";
+		std::cout << "f"<< std::endl;
 	}
 	{
 		std::cout << "Double: ";
-		std::cout << x << std::endl;
+		std::cout << x;
+		if (x - floor(x) == 0)
+			std::cout << ".0";
+		std::cout << std::endl;
 	}
 }

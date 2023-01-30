@@ -6,7 +6,7 @@ SRC = $(shell find ./src -name "*.cpp")
 
 OBJ = $(SRC:.cpp=.o)
 
-NAME = serialize
+NAME = scalar
 
 all: $(NAME)
 
